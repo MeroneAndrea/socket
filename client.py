@@ -6,6 +6,7 @@ SERVER_PORT = 22224
 
 
 def Comandi(socket): #controllo dei dati
+    
     while True:
         try:
             dati = input(
@@ -42,8 +43,6 @@ def connessioneServer(address, port):
     print("Connesso a " + str((address, port)))
     Comandi(sock_service)
     sock_service.close()
-
-
 
 if __name__ == "__main__":
     connessioneServer(SERVER_ADDRESS, SERVER_PORT)
