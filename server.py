@@ -1,19 +1,72 @@
-#!/usr/bin/env python3
-#https://realpython.com/python-sockets/
 import socket
 
-HOST = '127.0.0.1'  # Indirizzo dell'interfaccia standard di loopback (localhost)
-PORT = 65432        # Porta di ascolto, la lista di quelle utilizzabili parte da >1023)
+SERVER_ADDRESS = '127.0.0.1'
+SERVER_PORT = 22224
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen()
-    print("[*] In ascolto su %s:%d" % (HOST, PORT))
-    clientsocket, address = s.accept()
-    with clientsocket as cs:
-        print('Connessione da', address)
+
+def Comandi(socket): #verifica dei dati
+    while True:
+        sock_service, addr_client = socket.accept()
+        print("\nConnessione ricevuta da " + str(addr_client))#messaggio della ricezione di connesione         
+        print("\nAspetto di ricevere i dati ")
+        contConn = 0
         while True:
-            data = cs.recv(1024)
-            if not data:
+            dati = sock_service.recv(2048)
+            contConn += 1
+            if not dati:
+                print("Fine dati dal client. Reset")
                 break
-            cs.sendall(data)
+            dati = dati.decode()
+            print("Ricevuto: '%s'" % dati)#ricezione e decodifica dei dati                              
+            if dati == '0':
+                print("Chiudo la connessione con " + str(addr_client))
+                break
+
+            dati = dati.split(";") #lo split serve a dividere la stringa 
+            risposta = str()
+
+            #Verifica dell'operatore e successivamente dei numeri
+            if dati[0] == "piu" or dati[0] == "meno" or dati[0] == "per" or dati[0] == "diviso":
+                try:
+                    dati[1] = int(dati[1])
+                    dati[2] = int(dati[2])
+                except ValueError:
+                    print("ValueError")
+                    risposta = "Errore inserimento numeri."
+
+                if risposta == "":
+                    risultato = int()
+ 
+                    if dati[0] == "piu": #operazioni 
+                        risultato = dati[1] + dati[2]
+                    elif dati[0] == "meno":
+                        risultato = dati[1] - dati[2]
+                    elif dati[0] == "per":
+                        risultato = dati[1] * dati[2]
+                    else:
+                        risultato = dati[1] / dati[2]
+
+                    #la stringa: 
+                    risposta = "Il risultato dell'operazione " + \
+                        str(dati[0]) + " tra " + str(dati[1]) + " e " + \
+                        str(dati[2]) + " è uguale a " + str(risultato) + "."
+            else:
+                risposta = "Operazione non valida."
+
+            risposta = risposta.encode()
+
+            sock_service.send(risposta)
+        sock_service.close()
+
+#avvio del Server
+def avviaServer(address, port):
+    sock_listen = socket.socket()
+    sock_listen.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock_listen.bind((address, port))
+    sock_listen.listen(5)
+    print("Server in ascolto su %s." % str((address, port)))
+    Comandi(sock_listen)#ricezione dei comandi
+
+
+if __name__ == "__main__":
+    avviaServer(SERVER_ADDRESS, SERVER_PORT)
