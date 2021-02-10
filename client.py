@@ -1,52 +1,49 @@
-#!/usr/bin/env python3
-
-#TEST DEL TERMINALE
-input_string = 'Hello'
-print(type(input_string))
-input_bytes_encoded = input_string.encode()
-print(type(input_bytes_encoded))
-print(input_bytes_encoded)
-output_string=input_bytes_encoded.decode()
-print(type(output_string))
-print(output_string)
 
 import socket
 
-#Dichiarazione indirizzo e porta server
 SERVER_ADDRESS = '127.0.0.1'
 SERVER_PORT = 22224
 
-#Connessione del Client al Server
-sock_service = socket.socket()
-sock_service.connect((SERVER_ADDRESS, SERVER_PORT))
-print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT)))
 
-while True:
-    try:
-        dati = input("Inserisci i dati da inviare (0 per terminare la connessione): ")      #Input dei dati
-    except EOFError:
-        print("\nOkay. Exit")
-        break
-    if not dati:
-        print("Non puoi inviare una stringa vuota!")                     #Se la stringa è vuota, uguale a 0 o viene generato un errore
-        continue                                                         #allora viene mandato in output un messaggio d'errore
-    if dati == '0':
-        print("Chiudo la connessione con il server!")
-        break
-    
-    #Codifica e invio dei dati al Server
-    dati = dati.encode()
-    sock_service.send(dati)
-    dati = sock_service.recv(2048)
+def Comandi(socket): #controllo dei dati
+    while True:
+        try:
+            dati = input(
+                "Inserisci i dati dell'operazione (ko per terminare la connessione): ")
+        except EOFError:
+            print("\nOkay. Exit")
+            break
+        if not dati:
+            print("Errore")
+            continue
+        if dati == 'ko':
+            print("Chiudo la connessione con il server!")
+            break
 
-    if not dati:
-        print("Server non risponde. Exit")
-        break
-    
-    dati = dati.decode()
+        dati = dati.encode() #codifica dei dati
+        socket.send(dati) #invio dei dati
+        dati = socket.recv(2048)
 
-    #Il server ha ricevuto i dati
-    print("Ricevuto dal server:")
-    print(dati + '\n')
 
-sock_service.close()
+        if not dati: #se il server non risponde, mando il break per uscire
+            print("Server non risponde. Exit")
+            break
+
+        dati = dati.decode()
+
+        print("Ricevuto dal server:")
+        print(dati + '\n')
+
+
+#verifichiamo la connessione
+def connessioneServer(address, port):
+    sock_service = socket.socket()
+    sock_service.connect((address, port))
+    print("Connesso a " + str((address, port)))
+    Comandi(sock_service)
+    sock_service.close()
+
+
+
+if __name__ == "__main__":
+    connessioneServer(SERVER_ADDRESS, SERVER_PORT)
