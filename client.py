@@ -9,7 +9,7 @@ def Comandi(socket): #controllo dei dati
     while True:
         try:
             dati = input(
-                "Inserisci i dati dell'operazione (ko per terminare la connessione): ")
+                "dati dell'operazione (ko per terminare la connessione): ")
         except EOFError:
             print("\nOkay. Exit")
             break

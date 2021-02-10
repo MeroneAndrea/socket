@@ -3,7 +3,8 @@ import socket
 SERVER_ADDRESS = '127.0.0.1'
 SERVER_PORT = 22224
 
-def riceviComandi(socket): #verifica dei dati
+
+def Comandi(socket): #verifica dei dati
     while True:
         sock_service, addr_client = socket.accept()
         print("\nConnessione ricevuta da " + str(addr_client))#messaggio della ricezione di connesione         
@@ -15,7 +16,7 @@ def riceviComandi(socket): #verifica dei dati
             if not dati:
                 print("Fine dati dal client. Reset")
                 break
-
+                    
             dati = dati.decode()
             print("Ricevuto: '%s'" % dati)#ricezione e decodifica dei dati                              
             if dati == '0':
@@ -66,8 +67,7 @@ def avviaServer(address, port):
     sock_listen.bind((address, port))
     sock_listen.listen(5)
     print("Server in ascolto su %s." % str((address, port)))
-
-    riceviComandi(sock_listen)#ricezione dei comandi
+    Comandi(sock_listen)#ricezione dei comandi
 
 
 if __name__ == "__main__":
