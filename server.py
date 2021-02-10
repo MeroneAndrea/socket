@@ -16,7 +16,6 @@ def Comandi(socket): #verifica dei dati
             if not dati:
                 print("Fine dati dal client. Reset")
                 break
-                    
             dati = dati.decode()
             print("Ricevuto: '%s'" % dati)#ricezione e decodifica dei dati                              
             if dati == '0':
@@ -38,7 +37,6 @@ def Comandi(socket): #verifica dei dati
                 if risposta == "":
                     risultato = int()
  
-                    
                     if dati[0] == "piu": #operazioni 
                         risultato = dati[1] + dati[2]
                     elif dati[0] == "meno":
