@@ -45,4 +45,4 @@ while True:
 
         sock_service.send(dati)
 
-    sock_service.close()
+sock_service.close()
