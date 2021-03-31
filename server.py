@@ -4,21 +4,25 @@ import socket
 
 
 SERVER_ADDRESS = '127.0.0.1'
-
 SERVER_PORT = 22224
-
 sock_listen = socket.socket()
-
 sock_listen.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
 sock_listen.bind((SERVER_ADDRESS, SERVER_PORT))
-
 sock_listen.listen(5)
 
 print("Server in ascolto su %s." % str((SERVER_ADDRESS, SERVER_PORT))) #facciamo vedere che il server è in ascolto sulla porta 
-
+protocollo = ["SYN", "SYN ACK", "ACK with data", "ACK for data"]
+step=0
+dati=str(step)
 
 while True: 
+    sock_service, addr_client = sock_listen.accept()
+    print("\nConnessine ricevuta da "+str(addr_client))
+    print("\nAspetto di ricevere i dati")
+    step=0
+
+while True: 
+
     sock_service, addr_client = sock_listen.accept()
     print("\nConnessione ricevuta da " + str(addr_client)) #finché la connesione esiste allora il server rimane in attes adi ricevere i dati 
     print("\nAspetto di ricevere i dati ")

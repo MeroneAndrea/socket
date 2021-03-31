@@ -9,13 +9,16 @@ print(type(output_string))
 print(output_string)
 
 import socket #importiamo le socket
-
 SERVER_ADDRESS = '127.0.0.1'
 SERVER_PORT = 22224
 sock_service = socket.socket()
 sock_service.connect((SERVER_ADDRESS, SERVER_PORT))
 
-print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT))) #controlliamo òla connessione
+print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT))) #controlliamo la connessione
+protocollo = ["SYN", "SYN ACK", "ACK with data", "ACK for data"]
+step=0
+dati=str(step)
+
 while True:
     try:
         dati = input("Inserisci i dati da inviare (0 per terminare la connessione): ") #richiesta di un input 
