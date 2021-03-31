@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-
-
 input_string = 'Hello'
 print(type(input_string))
 input_bytes_encoded = input_string.encode() #con questo trasformiamo la scritta in bite
@@ -14,9 +12,7 @@ import socket #importiamo le socket
 
 SERVER_ADDRESS = '127.0.0.1'
 SERVER_PORT = 22224
-
 sock_service = socket.socket()
-
 sock_service.connect((SERVER_ADDRESS, SERVER_PORT))
 
 print("Connesso a " + str((SERVER_ADDRESS, SERVER_PORT))) #controlliamo òla connessione
